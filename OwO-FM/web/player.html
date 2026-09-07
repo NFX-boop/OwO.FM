@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru" style="background:#050308;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>OwO.FM // Player</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="OwO.FM">
+    <meta name="theme-color" content="#050308">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icons/favicon.ico">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Syne:wght@800&display=swap">
+    <link rel="stylesheet" href="/css/player.css">
+    <link rel="stylesheet" href="/css/drive.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body style="background:#050308;margin:0;">
+    <canvas id="bgVisualizer"></canvas>
+
+    <div class="aurora-container">
+        <div class="aurora-blob aurora-1"></div>
+        <div class="aurora-blob aurora-2"></div>
+        <div class="aurora-blob aurora-3"></div>
+    </div>
+
+    <div class="drive-mode" id="driveMode">
+        <div class="drive-vfd-panel" id="driveVfdPanel">
+            <div class="drive-vfd-screen">
+                <canvas id="driveTickerCanvas"></canvas>
+                <div class="drive-vfd-footer">
+                    <div class="drive-vfd-inds" id="driveVfdInds">
+                        <span class="vfd-ind" data-ind="onair"><i></i>ON AIR</span>
+                        <span class="vfd-ind" data-ind="buffer"><i></i>BUFFER</span>
+                        <span class="vfd-ind" data-ind="standby"><i></i>STANDBY</span>
+                    </div>
+                    <div class="drive-vfd-meta" id="driveVfdMeta">OwO.FM // RADIO ACTIVE</div>
+                </div>
+            </div>
+        </div>
+        <div class="drive-cover-zone" id="driveCoverZone">
+            <img class="drive-cover" id="driveCover" src="" alt="Cover">
+            <button type="button" class="drive-exit" id="driveExit">EXIT</button>
+        </div>
+        <div class="drive-viz-wrap" id="driveVizWrap">
+            <canvas id="driveVizCanvas"></canvas>
+        </div>
+    </div>
+
+    <div class="about-overlay" id="moodModal" aria-hidden="true">
+        <div class="about-panel mood-panel" role="dialog" aria-labelledby="moodTitle">
+            <div class="about-header">
+                <h2 id="moodTitle">VIBE</h2>
+                <button type="button" class="about-close" id="moodClose" aria-label="Close">×</button>
+            </div>
+            <p class="about-text mood-hint">Pick the playlist mood for OwO station.</p>
+            <div class="mood-seg" id="moodSeg" data-mode="all">
+                <div class="mood-thumb" id="moodThumb" aria-hidden="true"></div>
+                <button type="button" class="mood-opt active" data-mode="all">ALL</button>
+                <button type="button" class="mood-opt" data-mode="party">PARTY</button>
+                <button type="button" class="mood-opt" data-mode="chill">CHILL</button>
+            </div>
+            <div class="mood-lock" id="moodLock" aria-live="polite"></div>
+        </div>
+    </div>
+
+    <div id="phase2" class="active">
+        <div class="player-card">
+            <div class="card-header" style="margin-bottom:0;">
+                <div class="palette-wrap">
+                    <button type="button" class="pill-btn" id="paletteBtn">PALETTE</button>
+                    <div class="palette-menu" id="paletteMenu">
+                        <button type="button" class="palette-option active" data-palette="default">Classic</button>
+                        <button type="button" class="palette-option" data-palette="vista">Vista Teal</button>
+                        <button type="button" class="palette-option" data-palette="dark">Ultra Dark</button>
+                    </div>
+                </div>
+                <div class="player-status-group">
+                    <span class="vibe-status" id="vibeStatus" aria-live="polite" aria-hidden="true">VIBE</span>
+                    <button type="button" class="pill-btn" id="moodOpenBtn">VIBE</button>
+                    <button type="button" class="pill-btn" id="nightDriveBtn">NIGHT DRIVE</button>
+                    <div class="on-air-indicator" id="onAirIndicator">
+                        <span class="on-air-dot"></span>
+                        <span id="onAirText">STANDBY</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vfd-screen" id="vfdDisplay">
+                <canvas id="visualizerCanvas"></canvas>
+                <div class="cover-container" id="coverContainer">
+                    <img class="cover-art" id="coverImg" src="" alt="Artwork">
+                    <div class="cover-overlay"></div>
+                </div>
+            </div>
+
+            <div class="vfd-ticker-box">
+                <canvas id="tickerCanvas"></canvas>
+            </div>
+
+            <div class="controls-row">
+                <button type="button" class="ctrl-btn play-main" id="playBtn" aria-label="Play/Stop">
+                    <svg class="icon" id="iconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg class="icon" id="iconStop" viewBox="0 0 24 24" style="display:none"><path d="M6 6h12v12H6z"/></svg>
+                </button>
+                <button type="button" class="ctrl-btn next-btn" id="nextBtn" aria-label="Next">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                </button>
+            </div>
+
+            <div class="stations-grid" id="stationsList"></div>
+        </div>
+    </div>
+
+    <script src="/js/player.js"></script>
+    <script src="/js/drive.js"></script>
+</body>
+</html>
